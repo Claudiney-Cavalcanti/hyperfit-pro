@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HyperFit Pro - Programa de Hipertrofia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #22c55e 0%, #3b82f6 50%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: gradientShift 3s ease-in-out infinite alternate;
+        }
+
+        .header p {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+
+        @keyframes gradientShift {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(20deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Progress Cards */
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .progress-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .progress-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .progress-card h3 {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #22c55e, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-card .label {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+        }
+
+        /* Timer Section */
+        .timer-section {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .timer-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #f8fafc;
+            font-weight: 600;
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #22c55e, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Inter', monospace;
+        }
+
+        .timer-display.active {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .timer-presets {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .timer-preset-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8fafc;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timer-preset-btn:hover {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            transform: translateY(-2px);
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .timer-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px -5px rgba(34, 197, 94, 0.3);
+        }
+
+        .timer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(34, 197, 94, 0.4);
+        }
+
+        .timer-btn.pause {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.3);
+        }
+
+        .timer-btn.pause:hover {
+            box-shadow: 0 15px 30px -5px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Workout Cards */
+        .workouts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .workout-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .workout-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4);
+        }
+
+        .workout-card.completed {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .workout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .workout-day {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .workout-muscles {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .exercise-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .exercise-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .exercise-item:last-child {
+            border-bottom: none;
+        }
+
+        .exercise-name {
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 0.5rem;
+        }
+
+        .exercise-details {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .workout-complete {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .workout-complete:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .workout-complete input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #22c55e;
+            cursor: pointer;
+        }
+
+        .workout-complete label {
+            color: #f8fafc;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Abdominal Vacuum Section */
+        .vacuum-section {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .vacuum-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #22c55e, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .vacuum-routines {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .vacuum-routine {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vacuum-routine h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #f8fafc;
+        }
+
+        .vacuum-steps {
+            list-style: none;
+        }
+
+        .vacuum-steps li {
+            padding: 0.75rem 0;
+            color: #cbd5e1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .vacuum-steps li:last-child {
+            border-bottom: none;
+        }
+
+        .vacuum-steps li::before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            position: absolute;
+            left: 0;
+            top: 0.75rem;
+            background: linear-gradient(135deg, #22c55e, #3b82f6);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .vacuum-steps {
+            counter-reset: step-counter;
+        }
+
+        .vacuum-progression {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vacuum-progression h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #f8fafc;
+        }
+
+        .progression-weeks {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .progression-week {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border-left: 4px solid #22c55e;
+        }
+
+        .progression-week strong {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .progression-week span {
+            color: #cbd5e1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .header {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .timer-display {
+                font-size: 3rem;
+            }
+
+            .timer-presets {
+                gap: 0.5rem;
+            }
+
+            .timer-preset-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .timer-controls {
+                gap: 0.5rem;
+            }
+
+            .timer-btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.875rem;
+            }
+
+            .workouts-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .vacuum-routines {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Timer Alert */
+        .timer-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: alertBounce 0.5s ease-out;
+        }
+
+        @keyframes alertBounce {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .timer-alert h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .timer-alert button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .timer-alert button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>HyperFit Pro</h1>
+            <p>Programa de Hipertrofia 4x por Semana com Halteres</p>
+        </header>
+
+        <!-- Progress Section -->
+        <section class="progress-grid">
+            <div class="progress-card">
+                <h3>Semana Atual</h3>
+                <div class="value" id="currentWeek">1</div>
+                <div class="label">de 12 semanas</div>
+            </div>
+            <div class="progress-card">
+                <h3>Treinos Concluídos</h3>
+                <div class="value" id="completedWorkouts">0</div>
+                <div class="label">esta semana</div>
+            </div>
+            <div class="progress-card">
+                <h3>Progresso Semanal</h3>
+                <div class="value" id="weeklyProgress">0%</div>
+                <div class="label">meta: 4 treinos</div>
+            </div>
+            <div class="progress-card">
+                <h3>Total de Exercícios</h3>
+                <div class="value" id="totalExercises">72</div>
+                <div class="label">realizados</div>
+            </div>
+        </section>
+
+        <!-- Timer Section -->
+        <section class="timer-section">
+            <h2>⏱️ Timer de Descanso</h2>
+            <div class="timer-display" id="timerDisplay">00:00</div>
+            <div class="timer-presets">
+                <button class="timer-preset-btn" onclick="setTimer(45)">45s</button>
+                <button class="timer-preset-btn" onclick="setTimer(60)">1min</button>
+                <button class="timer-preset-btn" onclick="setTimer(90)">1:30</button>
+                <button class="timer-preset-btn" onclick="setTimer(120)">2min</button>
+            </div>
+            <div class="timer-controls">
+                <button class="timer-btn" id="startBtn" onclick="startTimer()">Iniciar</button>
+                <button class="timer-btn pause" id="pauseBtn" onclick="pauseTimer()" style="display: none;">Pausar</button>
+            </div>
+        </section>
+
+        <!-- Workout Cards -->
+        <section class="workouts-grid">
+            <!-- Monday -->
+            <div class="workout-card" id="monday">
+                <div class="workout-header">
+                    <div>
+                        <div class="workout-day">Segunda-feira</div>
+                        <div class="workout-muscles">Peito + Tríceps</div>
+                    </div>
+                </div>
+                <ul class="exercise-list">
+                    <li class="exercise-item">
+                        <div class="exercise-name">Supino com Halteres</div>
+                        <div class="exercise-details">
+                            <span>4 séries × 8-12 reps</span>
+                            <span>90s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Supino Inclinado com Halteres</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 10-12 reps</span>
+                            <span>75s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Crucifixo</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 12-15 reps</span>
+                            <span>60s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Tríceps Testa</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 10-12 reps</span>
+                            <span>60s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Tríceps Francês</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 12-15 reps</span>
+                            <span>45s descanso</span>
+                        </div>
+                    </li>
+                </ul>
+                <div class="workout-complete" onclick="toggleWorkout('monday')">
+                    <input type="checkbox" id="mondayCheck">
+                    <label for="mondayCheck">Treino Concluído</label>
+                </div>
+            </div>
+
+            <!-- Tuesday -->
+            <div class="workout-card" id="tuesday">
+                <div class="workout-header">
+                    <div>
+                        <div class="workout-day">Terça-feira</div>
+                        <div class="workout-muscles">Costas + Bíceps</div>
+                    </div>
+                </div>
+                <ul class="exercise-list">
+                    <li class="exercise-item">
+                        <div class="exercise-name">Remada Curvada</div>
+                        <div class="exercise-details">
+                            <span>4 séries × 8-12 reps</span>
+                            <span>90s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Remada Unilateral</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 10-12 reps</span>
+                            <span>75s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Pullover</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 12-15 reps</span>
+                            <span>60s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Rosca Direta</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 10-12 reps</span>
+                            <span>60s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Rosca Martelo</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 12-15 reps</span>
+                            <span>45s descanso</span>
+                        </div>
+                    </li>
+                </ul>
+                <div class="workout-complete" onclick="toggleWorkout('tuesday')">
+                    <input type="checkbox" id="tuesdayCheck">
+                    <label for="tuesdayCheck">Treino Concluído</label>
+                </div>
+            </div>
+
+            <!-- Thursday -->
+            <div class="workout-card" id="thursday">
+                <div class="workout-header">
+                    <div>
+                        <div class="workout-day">Quinta-feira</div>
+                        <div class="workout-muscles">Ombros + Trapézio</div>
+                    </div>
+                </div>
+                <ul class="exercise-list">
+                    <li class="exercise-item">
+                        <div class="exercise-name">Desenvolvimento</div>
+                        <div class="exercise-details">
+                            <span>4 séries × 8-12 reps</span>
+                            <span>90s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Elevação Lateral</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 12-15 reps</span>
+                            <span>60s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Elevação Frontal</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 12-15 reps</span>
+                            <span>60s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Remada Alta</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 10-12 reps</span>
+                            <span>60s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Encolhimento</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 15-20 reps</span>
+                            <span>45s descanso</span>
+                        </div>
+                    </li>
+                </ul>
+                <div class="workout-complete" onclick="toggleWorkout('thursday')">
+                    <input type="checkbox" id="thursdayCheck">
+                    <label for="thursdayCheck">Treino Concluído</label>
+                </div>
+            </div>
+
+            <!-- Friday -->
+            <div class="workout-card" id="friday">
+                <div class="workout-header">
+                    <div>
+                        <div class="workout-day">Sexta-feira</div>
+                        <div class="workout-muscles">Pernas + Core</div>
+                    </div>
+                </div>
+                <ul class="exercise-list">
+                    <li class="exercise-item">
+                        <div class="exercise-name">Agachamento</div>
+                        <div class="exercise-details">
+                            <span>4 séries × 12-15 reps</span>
+                            <span>90s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Afundo</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 10-12 reps/perna</span>
+                            <span>75s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Stiff</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 10-12 reps</span>
+                            <span>75s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Panturrilha em Pé</div>
+                        <div class="exercise-details">
+                            <span>4 séries × 15-20 reps</span>
+                            <span>45s descanso</span>
+                        </div>
+                    </li>
+                    <li class="exercise-item">
+                        <div class="exercise-name">Prancha</div>
+                        <div class="exercise-details">
+                            <span>3 séries × 30-60s</span>
+                            <span>45s descanso</span>
+                        </div>
+                    </li>
+                </ul>
+                <div class="workout-complete" onclick="toggleWorkout('friday')">
+                    <input type="checkbox" id="fridayCheck">
+                    <label for="fridayCheck">Treino Concluído</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Abdominal Vacuum Section -->
+        <section class="vacuum-section">
+            <h2>🫁 Vácuo Abdominal Diário</h2>
+            <div class="vacuum-routines">
+                <div class="vacuum-routine">
+                    <h3>🌅 Rotina Matinal</h3>
+                    <ol class="vacuum-steps">
+                        <li>Deite-se de costas com os joelhos flexionados</li>
+                        <li>Expire completamente todo o ar dos pulmões</li>
+                        <li>Puxe o umbigo em direção à coluna vertebral</li>
+                        <li>Mantenha a contração por 10-20 segundos</li>
+                        <li>Respire normalmente e repita 5 vezes</li>
+                    </ol>
+                </div>
+                <div class="vacuum-routine">
+                    <h3>🌙 Rotina Noturna</h3>
+                    <ol class="vacuum-steps">
+                        <li>Deite-se confortavelmente na cama</li>
+                        <li>Coloque uma mão no peito e outra no abdômen</li>
+                        <li>Expire lentamente pela boca</li>
+                        <li>Contraia o abdômen sugando para dentro</li>
+                        <li>Mantenha por 15-30 segundos, repita 3 vezes</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="vacuum-progression">
+                <h3>📈 Progressão Semanal</h3>
+                <div class="progression-weeks">
+                    <div class="progression-week">
+                        <strong>Semanas 1-2:</strong> <span>10-15 segundos × 3 repetições</span>
+                    </div>
+                    <div class="progression-week">
+                        <strong>Semanas 3-4:</strong> <span>15-20 segundos × 4 repetições</span>
+                    </div>
+                    <div class="progression-week">
+                        <strong>Semanas 5-6:</strong> <span>20-30 segundos × 4 repetições</span>
+                    </div>
+                    <div class="progression-week">
+                        <strong>Semanas 7-8:</strong> <span>30-40 segundos × 5 repetições</span>
+                    </div>
+                    <div class="progression-week">
+                        <strong>Semanas 9-12:</strong> <span>40-60 segundos × 5 repetições</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Timer State
+        let timerInterval;
+        let timerSeconds = 0;
+        let isTimerRunning = false;
+        let isPaused = false;
+
+        // Progress State
+        const completedWorkouts = new Set();
+        let currentWeek = 1;
+
+        // Timer Functions
+        function setTimer(seconds) {
+            timerSeconds = seconds;
+            updateTimerDisplay();
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                isPaused = false;
+                updateTimerButtons();
+            }
+        }
+
+        function startTimer() {
+            if (timerSeconds === 0) return;
+            
+            if (isPaused) {
+                // Continue from pause
+                isPaused = false;
+                isTimerRunning = true;
+            } else {
+                // Start new timer
+                isTimerRunning = true;
+            }
+            
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.classList.add('active');
+            
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+                
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    isPaused = false;
+                    timerDisplay.classList.remove('active');
+                    playAlarm();
+                    updateTimerButtons();
+                }
+            }, 1000);
+            
+            updateTimerButtons();
+        }
+
+        function pauseTimer() {
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                isPaused = true;
+                document.getElementById('timerDisplay').classList.remove('active');
+                updateTimerButtons();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+
+        function updateTimerButtons() {
+            const startBtn = document.getElementById('startBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            
+            if (isTimerRunning) {
+                startBtn.style.display = 'none';
+                pauseBtn.style.display = 'inline-block';
+                pauseBtn.textContent = 'Pausar';
+            } else if (isPaused) {
+                startBtn.style.display = 'inline-block';
+                pauseBtn.style.display = 'none';
+                startBtn.textContent = 'Continuar';
+            } else {
+                startBtn.style.display = 'inline-block';
+                pauseBtn.style.display = 'none';
+                startBtn.textContent = 'Iniciar';
+            }
+        }
+
+        function playAlarm() {
+            // Create alert popup
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'timer-alert';
+            alertDiv.innerHTML = `
+                <h3>⏰ Tempo Esgotado!</h3>
+                <p>Descanso finalizado. Hora do próximo exercício!</p>
+                <button onclick="this.parentElement.remove()">OK</button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            // Play audio if available
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBCuSze7VgSkEK3zM7OGOOAglYrTs65xMAwtMo+b0uWwbBzWL1+7Vhy4FKnvQ8NyUQgoTVbHn7axXFQo9ltryunEdBCl+yuzg');
+                audio.play();
+            } catch (e) {
+                // Audio not supported, continue without sound
+            }
+            
+            // Auto-remove alert after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentElement) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Workout Functions
+        function toggleWorkout(day) {
+            const checkbox = document.getElementById(day + 'Check');
+            const card = document.getElementById(day);
+            
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                completedWorkouts.add(day);
+                card.classList.add('completed');
+            } else {
+                completedWorkouts.delete(day);
+                card.classList.remove('completed');
+            }
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const completed = completedWorkouts.size;
+            const percentage = Math.round((completed / 4) * 100);
+            
+            document.getElementById('completedWorkouts').textContent = completed;
+            document.getElementById('weeklyProgress').textContent = percentage + '%';
+            
+            // Update total exercises (example calculation)
+            const totalExercises = completed * 18; // 18 exercises per workout on average
+            document.getElementById('totalExercises').textContent = totalExercises;
+        }
+
+        // Week progression (can be enhanced with actual date logic)
+        function updateWeekCounter() {
+            // Simple example - in real app, this would be based on start date
+            const startDate = new Date('2024-01-01'); // Example start date
+            const currentDate = new Date();
+            const diffTime = Math.abs(currentDate - startDate);
+            const diffWeeks = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7));
+            
+            currentWeek = Math.min(diffWeeks, 12);
+            document.getElementById('currentWeek').textContent = currentWeek;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimerDisplay();
+            updateTimerButtons();
+            updateProgress();
+            updateWeekCounter();
+            
+            // Add fade-in animation to elements
+            const elements = document.querySelectorAll('.progress-card, .workout-card, .timer-section, .vacuum-section');
+            elements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+                if (isTimerRunning) {
+                    pauseTimer();
+                } else {
+                    startTimer();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
